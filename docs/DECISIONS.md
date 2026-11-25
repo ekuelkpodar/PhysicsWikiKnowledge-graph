@@ -38,11 +38,14 @@ Choices made while building, with the reasoning. Newest sections at the bottom.
 - **Politeness.** One request at a time, at least 1 s apart. Exponential backoff runs from
   2 s up to 120 s on 429/5xx, and `Retry-After` is honoured. The User-Agent names the
   project and repo URL. Set `REPO_URL` to the real GitHub URL before re-fetching.
-- **Genealogy expansion.** Many advisors of "physicists" are mathematicians or chemists
-  who are not in the seed. We follow P184/P185/P1066 for **2 hops** beyond the seed and
-  fetch metadata, awards and employers for those people. They become `nodes_person`
-  rows with `is_seed=false`. They count toward genealogy, but they are hidden by the
-  "core physicists" filter and are excluded from seed-level statistics.
+- **Genealogy expansion (asymmetric).** Seed people list 10,823 doctoral students (P185)
+  who are not in the seed, mostly Mathematics Genealogy Project imports without an English
+  article, plus 1,205 advisors outside the seed. **Hop 1** follows P184/P185/P1066 in both
+  directions and fetches full data for those ~12k people, so non-seed students count as
+  real descendants. **Hop 2** goes **up only** (P184/P1066): it extends lineages toward
+  their roots but does not walk down into tens of thousands more students. Non-seed people
+  are `nodes_person` rows with `is_seed=false`. They count in genealogy metrics but are
+  excluded from seed-level statistics (survival, migration, quality).
 - **ADVISED symmetrization.** P184 on a student and P185 on an advisor merge into a single
   `advisor → student` edge. The edge keeps `via_p184`, `via_p185` and `both_directions`
   as provenance flags.
@@ -66,3 +69,36 @@ Choices made while building, with the reasoning. Newest sections at the bottom.
   current country for most places, so Königsberg maps to Russia and Lemberg to Ukraine.
   This is a known, documented distortion in the migration view. Historical states are
   not reconstructed.
+
+## Web
+
+- **Sigma v3, not v4.** npm now ships sigma 4, which replaces `nodeReducer`/`edgeReducer`
+  with a new styles/primitives engine. We pinned the mature v3 API (3.0.x).
+- **TypeScript 6.0**, because typescript-eslint does not support TS 7 yet.
+- **HashRouter + relative base.** This works on GitHub Pages under any repo name with no
+  404.html trick. Filters live in the hash query string, so every view is a shareable
+  deep link.
+- **Gzip.** GitHub Pages compresses JSON on the fly. We keep the JSON compact (columnar
+  arrays, rounded floats) instead of shipping `.gz` files that Pages would not serve with
+  the right `Content-Encoding`.
+- **Concepts posing as people.** Genealogy links occasionally point at concepts. Q413 *physics* was recorded as someone's teacher. Any QID that is also the target of a field, award, employer or similar statement is dropped from `nodes_person` and logged in `data/graph/build_notes.json`.
+- **Horizon edges dropped.** ADVISED edges are kept only when both ends were fetched. The 27,900 hop‑1→hop‑2 student links point to people we never fetched, and keeping them would inflate descendant counts with empty nodes.
+- **Country normalisation.** Common historical states map to modern successors (`graph_utils.COUNTRY_ALIASES`): Soviet Union/Russian Empire → Russia, Kingdom of Prussia/German Reich → Germany, Austria‑Hungary → Austria, and so on. Multi‑successor states go to their core territory. This approximation matches the today's‑borders policy above.
+- **Award labels audited.** The major‑award list is matched against the labels that actually exist (for example "ICTP Dirac Medal", "Sakurai Prize", "The Shaw Prize in Astronomy"). An eval question caught the original mismatch. `is_nobel` covers the three science Nobels only.
+
+## Models
+
+- **Genealogy yield.** Laureate yield = laureate descendants / descendants, shrunk toward the base rate with prior weight k=50. Founders need ≥20 descendants. This stops a 3‑person tree with one laureate from ranking first.
+- **Link prediction.** Negatives are 1 random plus 1 hard per positive (the hard one shares an institution). P1066 "student of" is excluded from training so it can serve as an independent check. node2vec uses p=q=1 (DeepWalk walks) and single‑threaded Word2Vec for determinism. GraphSAGE is reported but loses; its numbers vary a little between runs (torch nondeterminism). LR probabilities saturate for prolific advisors, so the UI shows each prediction's rank instead of a "100%" score.
+- **Survival.** The clock starts at birth+27 (PhD proxy). An award before that is set to t=0.5, and an award after death or the horizon is not an event. Population: seed core physicists born 1850–1985. `has_recorded_advisor` is a control, because simply having an advisor on Wikidata is a fame marker. The PH test flags `laureate_advisor` and two cohorts; the UI says to read their HRs as time‑averaged.
+- **Migration.** Moves are dated by employment start; 71% are imputed as birth+27. Shock detection needs ≥60 people per origin and ≥15 per decade, because smaller samples produced spurious spikes.
+
+## API / eval
+
+- **Kùzu** (embedded) rather than Neo4j: no server, and it opens read‑only.
+- **Schema prompt label hints.** The prompt lists a few non‑obvious Wikidata labels ("Joseph John Thomson", "Fields medal"). A production system would add an entity‑resolution step instead.
+- **Eval status.** 30 questions with DuckDB ground truth and gold Cypher. The oracle run scores 30/30, which validates the load and the harness. The LLM run (`make api-eval`) needs `ANTHROPIC_API_KEY` and **has not been run**: there were no credentials in the build environment.
+
+## Media
+
+- Homebrew's ffmpeg on the build machine couldn't load (missing libx265), so `record-media.mjs` accepts `FFMPEG=`. The static binary from `imageio-ffmpeg` was used.

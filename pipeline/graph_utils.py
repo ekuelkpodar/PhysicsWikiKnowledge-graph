@@ -108,11 +108,11 @@ MAJOR_AWARDS = {
     "Wolf Prize in Physics": "Wolf",
     "Wolf Prize in Chemistry": "Wolf",
     "Wolf Prize in Mathematics": "Wolf",
-    "Dirac Medal of the ICTP": "Dirac",
-    "Dirac Medal (IOP)": "Dirac",
-    "Paul Dirac Medal and Prize": "Dirac",
-    "Dirac Prize": "Dirac",
+    # Labels exactly as Wikidata has them (audited against nodes_award, see DECISIONS.md)
+    "ICTP Dirac Medal": "Dirac",
+    "IOP Dirac Medal": "Dirac",
     "Breakthrough Prize in Fundamental Physics": "Breakthrough",
+    "Special Breakthrough Prize in Fundamental Physics": "Breakthrough",
     "Fields Medal": "Fields",
     "Abel Prize": "Abel",
     "Max Planck Medal": "Max Planck Medal",
@@ -126,12 +126,15 @@ MAJOR_AWARDS = {
     "Matteucci Medal": "Matteucci",
     "Oliver E. Buckley Condensed Matter Prize": "Buckley",
     "Dannie Heineman Prize for Mathematical Physics": "Heineman",
-    "J. J. Sakurai Prize for Theoretical Particle Physics": "Sakurai",
+    "Sakurai Prize": "Sakurai",
+    "Dannie Heineman Prize for Astrophysics": "Heineman",
     "Enrico Fermi Award": "Fermi",
     "Boltzmann Medal": "Boltzmann",
     "Crafoord Prize": "Crafoord",
+    "Crafoord Prize in Astronomy": "Crafoord",
+    "Crafoord Prize in Mathematics": "Crafoord",
     "Rumford Medal": "Rumford",
-    "Shaw Prize in Astronomy": "Shaw",
+    "The Shaw Prize in Astronomy": "Shaw",
     "Kavli Prize in Astrophysics": "Kavli",
     "Kavli Prize in Nanoscience": "Kavli",
     "Isaac Newton Medal": "Newton",
@@ -146,10 +149,16 @@ _MAJOR_LOWER = {k.lower(): v for k, v in MAJOR_AWARDS.items()}
 
 def classify_award(label: str | None) -> tuple[bool, str | None, bool]:
     """-> (is_major, group, is_nobel)."""
-    if not label:
+    if not isinstance(label, str) or not label:
         return False, None, False
     grp = _MAJOR_LOWER.get(label.strip().lower())
-    return grp is not None, grp, label.strip().lower().startswith("nobel prize in")
+    low = label.strip().lower()
+    is_nobel = low in {
+        "nobel prize in physics",
+        "nobel prize in chemistry",
+        "nobel prize in physiology or medicine",
+    }
+    return grp is not None, grp, is_nobel
 
 
 # --- Core physicist heuristic -------------------------------------------
@@ -172,7 +181,14 @@ def core_physicist_signals(
     award_labels: list[str],
     institution_labels: list[str],
 ) -> dict[str, bool]:
-    occ = [o for o in occupation_labels if o and o.lower() != "physicist"]
+    def _s(xs):
+        return [x for x in xs if isinstance(x, str) and x]
+
+    field_labels, occupation_labels = _s(field_labels), _s(occupation_labels)
+    award_labels, institution_labels = _s(award_labels), _s(institution_labels)
+    if not isinstance(description, str):
+        description = None
+    occ = [o for o in occupation_labels if o.lower() != "physicist"]
     return {
         "sig_description": bool(description and PHYS_DESC_RE.search(description)),
         "sig_field": any(f and PHYS_FIELD_RE.search(f) for f in field_labels),
@@ -189,3 +205,95 @@ def is_core_physicist(signals: dict[str, bool]) -> bool:
     astronomer, a physics field of work, a specific physics occupation, a physics award,
     or a physics-named employer / education institution."""
     return any(signals.values())
+
+
+# --- Country normalisation (today's borders) ------------------------------------
+# Wikidata sometimes gives a historical state as a place's country. We map common
+# predecessor states to the modern successor so "born in Russia, worked in the Russian
+# Empire" is not counted as emigration. Ambiguous multi-successor states (Soviet Union,
+# Austria-Hungary, Holy Roman Empire) map to the successor that holds most of the people
+# (core territory); this is a documented approximation (see DECISIONS.md).
+COUNTRY_ALIASES = {
+    "People's Republic of China": "China",
+    "Republic of China (1912–1949)": "China",
+    "Qing dynasty": "China",
+    "Soviet Union": "Russia",
+    "Russian Empire": "Russia",
+    "Russian Soviet Federative Socialist Republic": "Russia",
+    "Tsardom of Russia": "Russia",
+    "Kingdom of the Netherlands": "Netherlands",
+    "Dutch Republic": "Netherlands",
+    "United Kingdom of Great Britain and Ireland": "United Kingdom",
+    "Kingdom of Great Britain": "United Kingdom",
+    "Kingdom of England": "United Kingdom",
+    "Kingdom of Scotland": "United Kingdom",
+    "Kingdom of Prussia": "Germany",
+    "German Reich": "Germany",
+    "German Empire": "Germany",
+    "Nazi Germany": "Germany",
+    "Weimar Republic": "Germany",
+    "West Germany": "Germany",
+    "East Germany": "Germany",
+    "German Confederation": "Germany",
+    "North German Confederation": "Germany",
+    "Kingdom of Bavaria": "Germany",
+    "Kingdom of Saxony": "Germany",
+    "Kingdom of Hanover": "Germany",
+    "Kingdom of Württemberg": "Germany",
+    "Grand Duchy of Baden": "Germany",
+    "Holy Roman Empire": "Germany",
+    "Kingdom of Denmark": "Denmark",
+    "Denmark–Norway": "Denmark",
+    "Kingdom of Italy": "Italy",
+    "Papal States": "Italy",
+    "Kingdom of the Two Sicilies": "Italy",
+    "Kingdom of Sardinia": "Italy",
+    "Grand Duchy of Tuscany": "Italy",
+    "Kingdom of France": "France",
+    "French First Republic": "France",
+    "First French Empire": "France",
+    "Second French Empire": "France",
+    "French Third Republic": "France",
+    "Austria–Hungary": "Austria",
+    "Austrian Empire": "Austria",
+    "Archduchy of Austria": "Austria",
+    "Habsburg monarchy": "Austria",
+    "Kingdom of Hungary": "Hungary",
+    "Czechoslovakia": "Czech Republic",
+    "Kingdom of Bohemia": "Czech Republic",
+    "Yugoslavia": "Serbia",
+    "Socialist Federal Republic of Yugoslavia": "Serbia",
+    "Kingdom of Yugoslavia": "Serbia",
+    "Ottoman Empire": "Turkey",
+    "Empire of Japan": "Japan",
+    "Polish–Lithuanian Commonwealth": "Poland",
+    "Congress Poland": "Poland",
+    "Second Polish Republic": "Poland",
+    "Polish People's Republic": "Poland",
+    "Kingdom of Poland": "Poland",
+    "Swedish Empire": "Sweden",
+    "Kingdom of Sweden": "Sweden",
+    "Kingdom of Spain": "Spain",
+    "Kingdom of Portugal": "Portugal",
+    "British India": "India",
+    "British Raj": "India",
+    "Dominion of India": "India",
+    "Ukrainian Soviet Socialist Republic": "Ukraine",
+    "Byelorussian Soviet Socialist Republic": "Belarus",
+    "Georgian Soviet Socialist Republic": "Georgia",
+    "Armenian Soviet Socialist Republic": "Armenia",
+    "Azerbaijan Soviet Socialist Republic": "Azerbaijan",
+    "Mandatory Palestine": "Israel",
+    "Union of South Africa": "South Africa",
+    "Dominion of Canada": "Canada",
+    "Province of Canada": "Canada",
+    "Colony of New Zealand": "New Zealand",
+    "Ancient Greece": "Greece",
+    "Kingdom of Greece": "Greece",
+}
+
+
+def normalize_country(label):
+    if not isinstance(label, str):
+        return label
+    return COUNTRY_ALIASES.get(label, label)

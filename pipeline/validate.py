@@ -83,7 +83,9 @@ def main() -> int:
             (dy.isna() & (CURRENT_YEAR - by > 110) & (by >= 1910)).fillna(False), "qid"
         ].tolist(),
         "missing_death_pre_1910_seed": seed.loc[seed.death_missing_suspect, "qid"].tolist(),
-        "student_older_than_advisor": adv.loc[(adv.gap < 0).fillna(False), ["advisor", "student", "gap"]]
+        "student_older_than_advisor": adv.loc[
+            (adv.gap < 0).fillna(False), ["advisor", "student", "gap"]
+        ]
         .astype({"gap": int})
         .to_dict("records"),
         "advisor_gap_under_10": int(((adv.gap >= 0) & (adv.gap < 10)).fillna(False).sum()),

@@ -1,0 +1,1193 @@
+{
+ "row_counts": {
+  "edges_advised": 18454,
+  "edges_advised_raw": 18455,
+  "edges_award": 34527,
+  "edges_born_in": 13737,
+  "edges_citizenship": 18404,
+  "edges_educated": 33389,
+  "edges_employer": 28494,
+  "edges_field": 17122,
+  "edges_influenced_by": 751,
+  "edges_notable_work": 4331,
+  "edges_occupation": 49148,
+  "edges_student_of": 1702,
+  "nodes_award": 4217,
+  "nodes_country": 401,
+  "nodes_field": 2319,
+  "nodes_institution": 6834,
+  "nodes_person": 25539,
+  "nodes_place": 5778,
+  "nodes_work": 4108
+ },
+ "orphans": {
+  "edges_advised": {
+   "advisor": 0,
+   "student": 0
+  },
+  "edges_award": {
+   "person": 0,
+   "award": 0
+  },
+  "edges_employer": {
+   "person": 0,
+   "institution": 0
+  },
+  "edges_educated": {
+   "person": 0,
+   "institution": 0
+  },
+  "edges_field": {
+   "person": 0,
+   "field": 0
+  },
+  "edges_born_in": {
+   "person": 0,
+   "place": 0
+  },
+  "edges_citizenship": {
+   "person": 0,
+   "country": 0
+  }
+ },
+ "cycles": {
+  "n_removed": 1,
+  "dag_after_breaking": true,
+  "removed": [
+   {
+    "cycle": [
+     "Q57065",
+     "Q90591"
+    ],
+    "removed_advisor": "Q57065",
+    "removed_student": "Q90591"
+   }
+  ]
+ },
+ "dates": {
+  "death_before_birth": {
+   "count": 3,
+   "items": [
+    "Q102291820",
+    "Q95764549",
+    "Q2893710"
+   ]
+  },
+  "lifespan_over_110": {
+   "count": 6,
+   "items": [
+    "Q4709856",
+    "Q2832837",
+    "Q25588470",
+    "Q11769098",
+    "Q102232536",
+    "Q5618699"
+   ]
+  },
+  "born_in_future": {
+   "count": 0,
+   "items": []
+  },
+  "alive_over_110": {
+   "count": 13,
+   "items": [
+    "Q139973961",
+    "Q119675395",
+    "Q7106938",
+    "Q102131751",
+    "Q102161297",
+    "Q102206860",
+    "Q102262437",
+    "Q102302559",
+    "Q102359175",
+    "Q102392755",
+    "Q95292826",
+    "Q95292916",
+    "Q102317079"
+   ]
+  },
+  "missing_death_pre_1910_seed": {
+   "count": 36,
+   "items": [
+    "Q111336385",
+    "Q4647577",
+    "Q17984072",
+    "Q4709005",
+    "Q4714507",
+    "Q30068229",
+    "Q59916235",
+    "Q62026451",
+    "Q11172658",
+    "Q85359115",
+    "Q5240460",
+    "Q5301869",
+    "Q56809018",
+    "Q17123019",
+    "Q367196",
+    "Q66459213",
+    "Q111014866",
+    "Q17465658",
+    "Q111917316",
+    "Q6216674",
+    "Q1573258",
+    "Q57915891",
+    "Q37831226",
+    "Q126417382",
+    "Q113934538",
+    "Q93254706",
+    "Q67731818",
+    "Q30501898",
+    "Q6804812",
+    "Q7558547",
+    "Q97154142",
+    "Q28203057",
+    "Q7910809",
+    "Q88727023",
+    "Q23950175",
+    "Q102316141"
+   ]
+  },
+  "student_older_than_advisor": {
+   "count": 132,
+   "items": [
+    {
+     "advisor": "Q100333052",
+     "student": "Q94625861",
+     "gap": -18
+    },
+    {
+     "advisor": "Q102334649",
+     "student": "Q18132175",
+     "gap": -4
+    },
+    {
+     "advisor": "Q102359176",
+     "student": "Q368476",
+     "gap": -36
+    },
+    {
+     "advisor": "Q10307889",
+     "student": "Q16946097",
+     "gap": -10
+    },
+    {
+     "advisor": "Q1210578",
+     "student": "Q1678571",
+     "gap": -10
+    },
+    {
+     "advisor": "Q122701",
+     "student": "Q57171",
+     "gap": -10
+    },
+    {
+     "advisor": "Q1279110",
+     "student": "Q103335485",
+     "gap": -1
+    },
+    {
+     "advisor": "Q1294713",
+     "student": "Q4714507",
+     "gap": -48
+    },
+    {
+     "advisor": "Q1351673",
+     "student": "Q12270113",
+     "gap": -2
+    },
+    {
+     "advisor": "Q1364884",
+     "student": "Q5618699",
+     "gap": -30
+    },
+    {
+     "advisor": "Q1516589",
+     "student": "Q30323400",
+     "gap": -37
+    },
+    {
+     "advisor": "Q154356",
+     "student": "Q47459004",
+     "gap": -2
+    },
+    {
+     "advisor": "Q157642",
+     "student": "Q553176",
+     "gap": -39
+    },
+    {
+     "advisor": "Q15807378",
+     "student": "Q93254706",
+     "gap": -33
+    },
+    {
+     "advisor": "Q159632",
+     "student": "Q36620",
+     "gap": -6
+    },
+    {
+     "advisor": "Q16105232",
+     "student": "Q4400066",
+     "gap": -18
+    },
+    {
+     "advisor": "Q16132962",
+     "student": "Q33374582",
+     "gap": -34
+    },
+    {
+     "advisor": "Q16499829",
+     "student": "Q27964429",
+     "gap": -4
+    },
+    {
+     "advisor": "Q16581",
+     "student": "Q93496",
+     "gap": -14
+    },
+    {
+     "advisor": "Q17004539",
+     "student": "Q61782487",
+     "gap": -7
+    },
+    {
+     "advisor": "Q172840",
+     "student": "Q15619198",
+     "gap": -2
+    },
+    {
+     "advisor": "Q1744292",
+     "student": "Q28004645",
+     "gap": -2
+    },
+    {
+     "advisor": "Q17489118",
+     "student": "Q37831226",
+     "gap": -62
+    },
+    {
+     "advisor": "Q178577",
+     "student": "Q18708337",
+     "gap": -1
+    },
+    {
+     "advisor": "Q184566",
+     "student": "Q1604330",
+     "gap": -3
+    },
+    {
+     "advisor": "Q186465",
+     "student": "Q21067493",
+     "gap": -4
+    },
+    {
+     "advisor": "Q186465",
+     "student": "Q6261647",
+     "gap": -1
+    },
+    {
+     "advisor": "Q186497",
+     "student": "Q7349244",
+     "gap": -1
+    },
+    {
+     "advisor": "Q1930849",
+     "student": "Q20742636",
+     "gap": -29
+    },
+    {
+     "advisor": "Q1960532",
+     "student": "Q4088527",
+     "gap": -1
+    },
+    {
+     "advisor": "Q19996291",
+     "student": "Q3564281",
+     "gap": -30
+    },
+    {
+     "advisor": "Q202631",
+     "student": "Q537705",
+     "gap": -3
+    },
+    {
+     "advisor": "Q202631",
+     "student": "Q6376238",
+     "gap": -9
+    },
+    {
+     "advisor": "Q2045880",
+     "student": "Q908426",
+     "gap": -19
+    },
+    {
+     "advisor": "Q20502579",
+     "student": "Q33374582",
+     "gap": -66
+    },
+    {
+     "advisor": "Q2104429",
+     "student": "Q63165",
+     "gap": -2
+    },
+    {
+     "advisor": "Q21116173",
+     "student": "Q62504200",
+     "gap": -11
+    },
+    {
+     "advisor": "Q21165168",
+     "student": "Q37831226",
+     "gap": -47
+    },
+    {
+     "advisor": "Q21261025",
+     "student": "Q114333576",
+     "gap": -2
+    },
+    {
+     "advisor": "Q2157518",
+     "student": "Q64597245",
+     "gap": -3
+    },
+    {
+     "advisor": "Q2159576",
+     "student": "Q102424431",
+     "gap": -41
+    },
+    {
+     "advisor": "Q22692961",
+     "student": "Q12893774",
+     "gap": -12
+    },
+    {
+     "advisor": "Q2283599",
+     "student": "Q2175555",
+     "gap": -5
+    },
+    {
+     "advisor": "Q24895935",
+     "student": "Q102306506",
+     "gap": -1
+    },
+    {
+     "advisor": "Q25712282",
+     "student": "Q2035457",
+     "gap": -10
+    },
+    {
+     "advisor": "Q27986554",
+     "student": "Q58911714",
+     "gap": -58
+    },
+    {
+     "advisor": "Q28189",
+     "student": "Q471965",
+     "gap": -1
+    },
+    {
+     "advisor": "Q2893710",
+     "student": "Q935",
+     "gap": -57
+    },
+    {
+     "advisor": "Q29912812",
+     "student": "Q4511425",
+     "gap": -3
+    },
+    {
+     "advisor": "Q3134568",
+     "student": "Q52431408",
+     "gap": -6
+    },
+    {
+     "advisor": "Q3167065",
+     "student": "Q41673172",
+     "gap": -3
+    },
+    {
+     "advisor": "Q323331",
+     "student": "Q102164724",
+     "gap": -4
+    },
+    {
+     "advisor": "Q327196",
+     "student": "Q62560131",
+     "gap": -8
+    },
+    {
+     "advisor": "Q327301",
+     "student": "Q982962",
+     "gap": -5
+    },
+    {
+     "advisor": "Q3289145",
+     "student": "Q50826762",
+     "gap": -3
+    },
+    {
+     "advisor": "Q33102818",
+     "student": "Q20567185",
+     "gap": -35
+    },
+    {
+     "advisor": "Q33133919",
+     "student": "Q112474813",
+     "gap": -27
+    },
+    {
+     "advisor": "Q333500",
+     "student": "Q97348199",
+     "gap": -3
+    },
+    {
+     "advisor": "Q355892",
+     "student": "Q1667121",
+     "gap": -5
+    },
+    {
+     "advisor": "Q3647462",
+     "student": "Q56855700",
+     "gap": -41
+    },
+    {
+     "advisor": "Q3656334",
+     "student": "Q20675791",
+     "gap": -2
+    },
+    {
+     "advisor": "Q370126",
+     "student": "Q669020",
+     "gap": -1
+    },
+    {
+     "advisor": "Q3820926",
+     "student": "Q295099",
+     "gap": -6
+    },
+    {
+     "advisor": "Q382739",
+     "student": "Q41378",
+     "gap": -2
+    },
+    {
+     "advisor": "Q391237",
+     "student": "Q5479986",
+     "gap": -1
+    },
+    {
+     "advisor": "Q4133493",
+     "student": "Q28792298",
+     "gap": -1
+    },
+    {
+     "advisor": "Q41799775",
+     "student": "Q29349427",
+     "gap": -8
+    },
+    {
+     "advisor": "Q42299",
+     "student": "Q694077",
+     "gap": -1
+    },
+    {
+     "advisor": "Q437263",
+     "student": "Q19662464",
+     "gap": -5
+    },
+    {
+     "advisor": "Q437534",
+     "student": "Q102313854",
+     "gap": -9
+    },
+    {
+     "advisor": "Q4396191",
+     "student": "Q4464954",
+     "gap": -1
+    },
+    {
+     "advisor": "Q451225",
+     "student": "Q17352719",
+     "gap": -6
+    },
+    {
+     "advisor": "Q457680",
+     "student": "Q8463210",
+     "gap": -2
+    },
+    {
+     "advisor": "Q46023413",
+     "student": "Q18618827",
+     "gap": -1
+    },
+    {
+     "advisor": "Q46023413",
+     "student": "Q18618829",
+     "gap": -1
+    },
+    {
+     "advisor": "Q46527798",
+     "student": "Q102402899",
+     "gap": -24
+    },
+    {
+     "advisor": "Q47537347",
+     "student": "Q42419233",
+     "gap": -26
+    },
+    {
+     "advisor": "Q476198",
+     "student": "Q3271217",
+     "gap": -15
+    },
+    {
+     "advisor": "Q477130",
+     "student": "Q3436135",
+     "gap": -9
+    },
+    {
+     "advisor": "Q4894155",
+     "student": "Q9066442",
+     "gap": -5
+    },
+    {
+     "advisor": "Q50906413",
+     "student": "Q102882302",
+     "gap": -1
+    },
+    {
+     "advisor": "Q510190",
+     "student": "Q46993216",
+     "gap": -3
+    },
+    {
+     "advisor": "Q515723",
+     "student": "Q102128358",
+     "gap": -2
+    },
+    {
+     "advisor": "Q520942",
+     "student": "Q113806254",
+     "gap": -2
+    },
+    {
+     "advisor": "Q520942",
+     "student": "Q20273847",
+     "gap": -2
+    },
+    {
+     "advisor": "Q5232304",
+     "student": "Q24890069",
+     "gap": -24
+    },
+    {
+     "advisor": "Q5325813",
+     "student": "Q3296158",
+     "gap": -1
+    },
+    {
+     "advisor": "Q5341862",
+     "student": "Q3123791",
+     "gap": -46
+    },
+    {
+     "advisor": "Q5443837",
+     "student": "Q63342566",
+     "gap": -3
+    },
+    {
+     "advisor": "Q5443837",
+     "student": "Q83735435",
+     "gap": -14
+    },
+    {
+     "advisor": "Q5549184",
+     "student": "Q135491412",
+     "gap": -3
+    },
+    {
+     "advisor": "Q5561001",
+     "student": "Q1782485",
+     "gap": -9
+    },
+    {
+     "advisor": "Q5679696",
+     "student": "Q96691519",
+     "gap": -38
+    },
+    {
+     "advisor": "Q5738307",
+     "student": "Q127944",
+     "gap": -24
+    },
+    {
+     "advisor": "Q59628917",
+     "student": "Q94285395",
+     "gap": -1
+    },
+    {
+     "advisor": "Q5981718",
+     "student": "Q17198085",
+     "gap": -23
+    },
+    {
+     "advisor": "Q60834357",
+     "student": "Q5335217",
+     "gap": -13
+    },
+    {
+     "advisor": "Q63872020",
+     "student": "Q102439905",
+     "gap": -2
+    },
+    {
+     "advisor": "Q656931",
+     "student": "Q4710774",
+     "gap": -7
+    },
+    {
+     "advisor": "Q66105",
+     "student": "Q12906",
+     "gap": -11
+    },
+    {
+     "advisor": "Q664725",
+     "student": "Q6832227",
+     "gap": -4
+    },
+    {
+     "advisor": "Q66713508",
+     "student": "Q102226534",
+     "gap": -2
+    },
+    {
+     "advisor": "Q6722",
+     "student": "Q7103",
+     "gap": -1
+    },
+    {
+     "advisor": "Q6733",
+     "student": "Q898191",
+     "gap": -1
+    },
+    {
+     "advisor": "Q67951339",
+     "student": "Q3159854",
+     "gap": -2
+    },
+    {
+     "advisor": "Q6834382",
+     "student": "Q4526400",
+     "gap": -1
+    },
+    {
+     "advisor": "Q7173587",
+     "student": "Q33374582",
+     "gap": -64
+    },
+    {
+     "advisor": "Q7174733",
+     "student": "Q6272386",
+     "gap": -33
+    },
+    {
+     "advisor": "Q7287136",
+     "student": "Q103318504",
+     "gap": -3
+    },
+    {
+     "advisor": "Q7343891",
+     "student": "Q8007993",
+     "gap": -2
+    },
+    {
+     "advisor": "Q736380",
+     "student": "Q8016090",
+     "gap": -13
+    },
+    {
+     "advisor": "Q7576322",
+     "student": "Q2129979",
+     "gap": -3
+    },
+    {
+     "advisor": "Q7610432",
+     "student": "Q8010055",
+     "gap": -2
+    },
+    {
+     "advisor": "Q7610848",
+     "student": "Q30592587",
+     "gap": -9
+    },
+    {
+     "advisor": "Q76474",
+     "student": "Q1582054",
+     "gap": -16
+    },
+    {
+     "advisor": "Q76641",
+     "student": "Q102156215",
+     "gap": -1
+    },
+    {
+     "advisor": "Q76641",
+     "student": "Q7926321",
+     "gap": -6
+    },
+    {
+     "advisor": "Q76641",
+     "student": "Q94844444",
+     "gap": -6
+    },
+    {
+     "advisor": "Q76683",
+     "student": "Q29375493",
+     "gap": -3
+    },
+    {
+     "advisor": "Q787109",
+     "student": "Q63801285",
+     "gap": -3
+    },
+    {
+     "advisor": "Q8019709",
+     "student": "Q973157",
+     "gap": -8
+    },
+    {
+     "advisor": "Q817692",
+     "student": "Q474250",
+     "gap": -3
+    },
+    {
+     "advisor": "Q828523",
+     "student": "Q80140182",
+     "gap": -2
+    },
+    {
+     "advisor": "Q88677",
+     "student": "Q69496",
+     "gap": -8
+    },
+    {
+     "advisor": "Q88732442",
+     "student": "Q58320349",
+     "gap": -4
+    },
+    {
+     "advisor": "Q89075",
+     "student": "Q977447",
+     "gap": -3
+    },
+    {
+     "advisor": "Q9047",
+     "student": "Q309818",
+     "gap": -8
+    },
+    {
+     "advisor": "Q9123",
+     "student": "Q4719461",
+     "gap": -8
+    },
+    {
+     "advisor": "Q93883746",
+     "student": "Q31668727",
+     "gap": -2
+    },
+    {
+     "advisor": "Q94842976",
+     "student": "Q18132175",
+     "gap": -2
+    },
+    {
+     "advisor": "Q981454",
+     "student": "Q102316141",
+     "gap": -36
+    },
+    {
+     "advisor": "Q984527",
+     "student": "Q95299431",
+     "gap": -1
+    }
+   ]
+  },
+  "advisor_gap_under_10": {
+   "count": 1397
+  },
+  "award_before_age_15": {
+   "count": 70,
+   "items": [
+    {
+     "person": "Q10305106",
+     "award": "Q57233987",
+     "year": 2000
+    },
+    {
+     "person": "Q111850234",
+     "award": "Q5442484",
+     "year": 2019
+    },
+    {
+     "person": "Q1408579",
+     "award": "Q1546213",
+     "year": 2009
+    },
+    {
+     "person": "Q1408579",
+     "award": "Q1982621",
+     "year": 2014
+    },
+    {
+     "person": "Q1408579",
+     "award": "Q56610568",
+     "year": 2011
+    },
+    {
+     "person": "Q14723229",
+     "award": "Q1576704",
+     "year": 2013
+    },
+    {
+     "person": "Q1479605",
+     "award": "Q18207954",
+     "year": 2007
+    },
+    {
+     "person": "Q1479605",
+     "award": "Q8058296",
+     "year": 2008
+    },
+    {
+     "person": "Q1516589",
+     "award": "Q1542976",
+     "year": 1991
+    },
+    {
+     "person": "Q15836979",
+     "award": "Q922078",
+     "year": 2014
+    },
+    {
+     "person": "Q15905620",
+     "award": "Q123512755",
+     "year": 2012
+    },
+    {
+     "person": "Q15905620",
+     "award": "Q1745238",
+     "year": 2007
+    },
+    {
+     "person": "Q16979968",
+     "award": "Q15631401",
+     "year": 2014
+    },
+    {
+     "person": "Q16979968",
+     "award": "Q59464038",
+     "year": 2009
+    },
+    {
+     "person": "Q17378081",
+     "award": "Q124178612",
+     "year": 2011
+    },
+    {
+     "person": "Q1738879",
+     "award": "Q426989",
+     "year": 2011
+    },
+    {
+     "person": "Q1900317",
+     "award": "Q5442484",
+     "year": 2014
+    },
+    {
+     "person": "Q1930849",
+     "award": "Q1496528",
+     "year": 2000
+    },
+    {
+     "person": "Q19308919",
+     "award": "Q6797279",
+     "year": 2001
+    },
+    {
+     "person": "Q1966726",
+     "award": "Q1356190",
+     "year": 2004
+    },
+    {
+     "person": "Q1966726",
+     "award": "Q1520638",
+     "year": 2005
+    },
+    {
+     "person": "Q1966726",
+     "award": "Q56884006",
+     "year": 1992
+    },
+    {
+     "person": "Q2057636",
+     "award": "Q41955909",
+     "year": 1986
+    },
+    {
+     "person": "Q2057636",
+     "award": "Q7541057",
+     "year": 1988
+    },
+    {
+     "person": "Q2057636",
+     "award": "Q891132",
+     "year": 2011
+    },
+    {
+     "person": "Q2059695",
+     "award": "Q1745238",
+     "year": 2009
+    },
+    {
+     "person": "Q21165505",
+     "award": "Q15631401",
+     "year": 2010
+    },
+    {
+     "person": "Q21165505",
+     "award": "Q18560214",
+     "year": 2011
+    },
+    {
+     "person": "Q21165505",
+     "award": "Q3332223",
+     "year": 2007
+    },
+    {
+     "person": "Q21165505",
+     "award": "Q898961",
+     "year": 1991
+    },
+    {
+     "person": "Q2427918",
+     "award": "Q891132",
+     "year": 2005
+    },
+    {
+     "person": "Q2435401",
+     "award": "Q1806156",
+     "year": 2008
+    },
+    {
+     "person": "Q2435401",
+     "award": "Q5442484",
+     "year": 2011
+    },
+    {
+     "person": "Q2443756",
+     "award": "Q426989",
+     "year": 2012
+    },
+    {
+     "person": "Q2579856",
+     "award": "Q426989",
+     "year": 2002
+    },
+    {
+     "person": "Q2636757",
+     "award": "Q1572080",
+     "year": 2001
+    },
+    {
+     "person": "Q26837548",
+     "award": "Q26837543",
+     "year": 2003
+    },
+    {
+     "person": "Q26837548",
+     "award": "Q34163793",
+     "year": 2010
+    },
+    {
+     "person": "Q2734877",
+     "award": "Q1855427",
+     "year": 1998
+    },
+    {
+     "person": "Q28381172",
+     "award": "Q7241433",
+     "year": 2008
+    },
+    {
+     "person": "Q28949977",
+     "award": "Q17112460",
+     "year": 2013
+    },
+    {
+     "person": "Q30069580",
+     "award": "Q5442484",
+     "year": 2009
+    },
+    {
+     "person": "Q30106737",
+     "award": "Q3332287",
+     "year": 2010
+    },
+    {
+     "person": "Q30163485",
+     "award": "Q30163416",
+     "year": 2015
+    },
+    {
+     "person": "Q30163485",
+     "award": "Q873412",
+     "year": 2009
+    },
+    {
+     "person": "Q30672897",
+     "award": "Q5442484",
+     "year": 2006
+    },
+    {
+     "person": "Q30672934",
+     "award": "Q41955909",
+     "year": 2001
+    },
+    {
+     "person": "Q30672934",
+     "award": "Q5442484",
+     "year": 2006
+    },
+    {
+     "person": "Q37647678",
+     "award": "Q5442484",
+     "year": 2011
+    },
+    {
+     "person": "Q3791646",
+     "award": "Q1164475",
+     "year": 2014
+    },
+    {
+     "person": "Q3791646",
+     "award": "Q41944646",
+     "year": 2014
+    },
+    {
+     "person": "Q3791646",
+     "award": "Q61744980",
+     "year": 2013
+    },
+    {
+     "person": "Q38328478",
+     "award": "Q56878278",
+     "year": 2014
+    },
+    {
+     "person": "Q41732147",
+     "award": "Q60686130",
+     "year": 2012
+    },
+    {
+     "person": "Q4308779",
+     "award": "Q4761592",
+     "year": 2001
+    },
+    {
+     "person": "Q43181534",
+     "award": "Q122740199",
+     "year": 2007
+    },
+    {
+     "person": "Q4707097",
+     "award": "Q5442484",
+     "year": 2006
+    },
+    {
+     "person": "Q4859009",
+     "award": "Q5442484",
+     "year": 2009
+    },
+    {
+     "person": "Q5525870",
+     "award": "Q31837964",
+     "year": 2011
+    },
+    {
+     "person": "Q5525870",
+     "award": "Q4761592",
+     "year": 2008
+    },
+    {
+     "person": "Q5679696",
+     "award": "Q5442484",
+     "year": 2010
+    },
+    {
+     "person": "Q5981718",
+     "award": "Q900130",
+     "year": 2004
+    },
+    {
+     "person": "Q6254266",
+     "award": "Q8058296",
+     "year": 1995
+    },
+    {
+     "person": "Q65593967",
+     "award": "Q28861961",
+     "year": 1967
+    },
+    {
+     "person": "Q7153872",
+     "award": "Q1814850",
+     "year": 2006
+    },
+    {
+     "person": "Q89740633",
+     "award": "Q5442484",
+     "year": 2017
+    },
+    {
+     "person": "Q92976",
+     "award": "Q18748039",
+     "year": 1995
+    },
+    {
+     "person": "Q92976",
+     "award": "Q5442484",
+     "year": 2007
+    },
+    {
+     "person": "Q92976",
+     "award": "Q986509",
+     "year": 2003
+    },
+    {
+     "person": "Q94827745",
+     "award": "Q134613391",
+     "year": 1849
+    }
+   ]
+  },
+  "award_over_5y_after_death": {
+   "count": 147
+  }
+ },
+ "summary": {
+  "people_seed": 11931,
+  "people_total": 25539,
+  "multi_statement": 275,
+  "genuine_conflicts": 220,
+  "year_only_births": 2095,
+  "missing_birth": 1095,
+  "no_death_date": 5310,
+  "death_missing_suspect": 36,
+  "bce_births": 9,
+  "core_physicists": 9899,
+  "advised_edges": 18454,
+  "advised_cycles_removed": 1,
+  "advised_one_direction_only": 435
+ },
+ "hard_failures": []
+}

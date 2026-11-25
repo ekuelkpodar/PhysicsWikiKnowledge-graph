@@ -1,0 +1,178 @@
+@import "tailwindcss";
+@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/inter";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Archival observatory palette. Light values first; .dark overrides. All text/background
+   pairs are checked to >= 4.5:1 (WCAG AA) — see src/lib/contrast.test.ts. */
+:root {
+  --bg: #f4eee1;
+  --surface: #fbf8f1;
+  --surface-2: #ece4d2;
+  --line: rgb(28 34 48 / 0.14);
+  --text: #1b2130;
+  --muted: #565042;
+  --gold: #7a5606;
+  --gold-soft: #d9ad4f;
+  --cyan: #0b6f80;
+  --danger: #a3341f;
+  --node: #4a5468;
+  --edge: rgb(27 33 48 / 0.18);
+  --grain-opacity: 0.05;
+  color-scheme: light;
+}
+.dark {
+  --bg: #0b0f14;
+  --surface: #121821;
+  --surface-2: #1a222e;
+  --line: rgb(233 223 199 / 0.12);
+  --text: #ebe2cc;
+  --muted: #a69d88;
+  --gold: #e0b55a;
+  --gold-soft: #e0b55a;
+  --cyan: #5fd4e6;
+  --danger: #f08a6c;
+  --node: #8b94a8;
+  --edge: rgb(233 223 199 / 0.13);
+  --grain-opacity: 0.07;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-cyan: var(--cyan);
+  --color-danger: var(--danger);
+  --font-display: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "ss01", "cv11";
+}
+
+/* subtle paper grain */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  mix-blend-mode: overlay;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  letter-spacing: -0.01em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+}
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+  z-index: 200;
+  background: var(--surface);
+  padding: 0.5rem 1rem;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--surface) 0%, var(--surface-2) 50%, var(--surface) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: 6px;
+}
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* range input */
+input[type="range"].slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  height: 24px;
+}
+input[type="range"].slider::-webkit-slider-runnable-track {
+  height: 3px;
+  background: var(--line);
+  border-radius: 2px;
+}
+input[type="range"].slider::-moz-range-track {
+  height: 3px;
+  background: var(--line);
+}
+input[type="range"].slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 16px;
+  width: 16px;
+  margin-top: -6.5px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--bg);
+}
+input[type="range"].slider::-moz-range-thumb {
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--bg);
+}
+
+/* Observable Plot inherits theme */
+figure[class^="plot"],
+svg[class^="plot"] {
+  background: transparent !important;
+  color: var(--text);
+  font-family: var(--font-sans);
+}
+.plot-tip {
+  color: var(--text);
+}

@@ -12,14 +12,15 @@ import duckdb
 import pandas as pd
 
 from pipeline.graph_utils import (
+    PHYS_FIELD_RE,
     break_cycles,
     classify_award,
     core_physicist_signals,
     is_core_physicist,
+    normalize_country,
     symmetrize_advised,
     wd_precision_label,
     wd_year,
-    PHYS_FIELD_RE,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -65,6 +66,14 @@ def main() -> int:
 
     simple["target"] = simple["o"].map(q)
     qual["target"] = qual["o"].map(q)
+    # Genealogy links sometimes point at concepts ("student of: physics" -> Q413). Anything
+    # that is also the target of a field/award/employer/... statement is not a person.
+    concept_props = ["P101", "P27", "P19", "P166", "P108", "P69", "P106", "P21", "P800"]
+    concept_targets = set(simple.loc[simple.prop.isin(concept_props), "target"].dropna()) | set(
+        qual.target.dropna()
+    )
+    miscast = sorted((set(hops.qid) & concept_targets) - set(clean.qid))
+    hops = hops[~hops.qid.isin(miscast)]
     people_set = set(hops.qid)
 
     # ---- entity lookups ----------------------------------------------------
@@ -72,6 +81,8 @@ def main() -> int:
     ent["country_qid"] = ent["country"].map(q)
     label = dict(zip(ent.e, ent.label))
     cty["lat"], cty["lon"] = zip(*cty["coord"].map(point))
+    cty["label_raw"] = cty["label"]
+    cty["label"] = cty["label"].map(normalize_country)
     country_label = dict(zip(cty.e, cty.label))
     label.update(country_label)
     meta["qid"] = meta["item"]
@@ -95,17 +106,22 @@ def main() -> int:
             ["item", "prop", "target"]
         ]
     )
-    # Only keep edges between people we have metadata for.
+    # Keep only edges between people we fetched. Hop-1 people's own students (beyond the
+    # expansion horizon) and links to concepts are dropped and counted.
+    n_before = len(advised_raw)
     advised_raw = advised_raw[
-        advised_raw.advisor.isin(people_set) | advised_raw.student.isin(people_set)
-    ]
+        advised_raw.advisor.isin(people_set) & advised_raw.student.isin(people_set)
+    ].reset_index(drop=True)
+    dropped_horizon = n_before - len(advised_raw)
 
     def year_series(col_q, col_prec):
         return meta.set_index("qid")[col_q].map(wd_year)
 
     birth_meta = year_series("birth", "birthPrec").to_dict()
     clean_birth = dict(zip(clean.qid, clean.birth_year))
-    birth_any = {k: (int(v) if pd.notna(v) else None) for k, v in {**birth_meta, **clean_birth}.items()}
+    birth_any = {
+        k: (int(v) if pd.notna(v) else None) for k, v in {**birth_meta, **clean_birth}.items()
+    }
     advised, removed = break_cycles(advised_raw, birth_any)
 
     student_of = simple_edges("P1066", ("student", "teacher"))
@@ -114,13 +130,11 @@ def main() -> int:
 
     def qual_edges(prop: str) -> pd.DataFrame:
         e = qual[(qual.prop == prop) & qual.target.notna()].copy()
-        e["year"] = e["time"].map(wd_year)
-        e["start_year"] = e["start"].map(wd_year)
-        e["end_year"] = e["end"].map(wd_year)
+        for src, dst in [("time", "year"), ("start", "start_year"), ("end", "end_year")]:
+            e[dst] = pd.to_numeric(e[src].map(wd_year), errors="coerce")
         e = e.rename(columns={"item": "person"})
-        e = (
-            e.groupby(["person", "target"], as_index=False)
-            .agg(year=("year", "min"), start_year=("start_year", "min"), end_year=("end_year", "max"))
+        e = e.groupby(["person", "target"], as_index=False).agg(
+            year=("year", "min"), start_year=("start_year", "min"), end_year=("end_year", "max")
         )
         for c in ["year", "start_year", "end_year"]:
             e[c] = e[c].astype("Int64")
@@ -158,7 +172,9 @@ def main() -> int:
     persons["is_seed"] = persons.hop == 0
     persons["name"] = persons.qid.map(m["label"])
     persons["description"] = persons.qid.map(m["desc"])
-    persons["sitelinks"] = pd.to_numeric(persons.qid.map(m["sitelinks"]), errors="coerce").astype("Int64")
+    persons["sitelinks"] = pd.to_numeric(persons.qid.map(m["sitelinks"]), errors="coerce").astype(
+        "Int64"
+    )
     persons["wikipedia_url"] = persons.qid.map(m["article"])
     persons["birth_year"] = persons.qid.map(m["birth"]).map(wd_year)
     persons["death_year"] = persons.qid.map(m["death"]).map(wd_year)
@@ -171,12 +187,21 @@ def main() -> int:
     c = clean.set_index("qid")
     seed = persons.is_seed
     for col in [
-        "birth_year", "death_year", "birth_precision", "death_precision",
+        "birth_year",
+        "death_year",
+        "birth_precision",
+        "death_precision",
     ]:
         persons.loc[seed, col] = persons.loc[seed, "qid"].map(c[col])
     for col in [
-        "birth_date", "death_date", "has_conflict", "multi_statement",
-        "death_missing_suspect", "lifespan_implausible", "vital_status", "name_raw",
+        "birth_date",
+        "death_date",
+        "has_conflict",
+        "multi_statement",
+        "death_missing_suspect",
+        "lifespan_implausible",
+        "vital_status",
+        "name_raw",
     ]:
         persons[col] = persons.qid.map(c[col])
     persons["name"] = persons["name"].fillna(persons["name_raw"]).fillna(persons.qid)
@@ -185,7 +210,9 @@ def main() -> int:
         persons[col] = persons[col].fillna(False).astype(bool)
     ext = ~seed
     by, dy = persons.birth_year, persons.death_year
-    persons.loc[ext, "lifespan_implausible"] = (((dy - by) < 0) | ((dy - by) > 110)).fillna(False)[ext]
+    persons.loc[ext, "lifespan_implausible"] = (((dy - by) < 0) | ((dy - by) > 110)).fillna(False)[
+        ext
+    ]
     persons.loc[ext, "death_missing_suspect"] = (dy.isna() & (by < 1910)).fillna(False)[ext]
     persons.loc[ext, "vital_status"] = "dead"
     persons.loc[ext & dy.isna(), "vital_status"] = "presumed_alive"
@@ -220,14 +247,18 @@ def main() -> int:
     aw = award_e.merge(awards, left_on="award", right_on="qid", how="left")
     major = aw[aw.is_major.fillna(False).astype(bool)]
     persons["n_awards"] = persons.qid.map(aw.groupby("person").size()).fillna(0).astype(int)
-    persons["n_major_awards"] = persons.qid.map(major.groupby("person").size()).fillna(0).astype(int)
+    persons["n_major_awards"] = (
+        persons.qid.map(major.groupby("person").size()).fillna(0).astype(int)
+    )
     persons["is_laureate"] = persons.n_major_awards > 0
     nob = aw[aw.is_nobel.fillna(False).astype(bool)]
     persons["is_nobel"] = persons.qid.isin(nob.person)
     persons["nobel_physics_year"] = persons.qid.map(
         aw[aw.label == "Nobel Prize in Physics"].groupby("person")["year"].min()
     ).astype("Int64")
-    persons["first_major_award_year"] = persons.qid.map(major.groupby("person")["year"].min()).astype("Int64")
+    persons["first_major_award_year"] = persons.qid.map(
+        major.groupby("person")["year"].min()
+    ).astype("Int64")
     persons["major_awards"] = persons.qid.map(
         major.groupby("person")["major_group"].agg(lambda s: sorted(set(s)))
     )
@@ -243,8 +274,12 @@ def main() -> int:
     occ_lbl = occ_e.assign(l=occ_e.occupation.map(label)).groupby("person")["l"].agg(list)
     aw_lbl = aw.groupby("person")["label"].agg(list)
     inst_lbl_map = institutions.set_index("qid")["label"]
-    inst_all = pd.concat([employer_e[["person", "institution"]], educated_e[["person", "institution"]]])
-    inst_lbl = inst_all.assign(l=inst_all.institution.map(inst_lbl_map)).groupby("person")["l"].agg(list)
+    inst_all = pd.concat(
+        [employer_e[["person", "institution"]], educated_e[["person", "institution"]]]
+    )
+    inst_lbl = (
+        inst_all.assign(l=inst_all.institution.map(inst_lbl_map)).groupby("person")["l"].agg(list)
+    )
     sigs = []
     for r in persons.itertuples(index=False):
         sigs.append(
@@ -263,7 +298,9 @@ def main() -> int:
 
     persons["n_students"] = persons.qid.map(advised.groupby("advisor").size()).fillna(0).astype(int)
     persons["n_advisors"] = persons.qid.map(advised.groupby("student").size()).fillna(0).astype(int)
-    persons["fields"] = persons["fields"].map(lambda v: json.dumps(v) if isinstance(v, list) else None)
+    persons["fields"] = persons["fields"].map(
+        lambda v: json.dumps(v) if isinstance(v, list) else None
+    )
     persons["major_awards"] = persons["major_awards"].map(
         lambda v: json.dumps(v) if isinstance(v, list) else None
     )
@@ -293,6 +330,15 @@ def main() -> int:
     for name, df in tables.items():
         df.to_parquet(GRAPH / f"{name}.parquet", index=False)
     (GRAPH / "advised_cycles_removed.json").write_text(json.dumps(removed, indent=1))
+    (GRAPH / "build_notes.json").write_text(
+        json.dumps(
+            {
+                "miscast_concepts": [{"qid": m, "label": label.get(m)} for m in miscast],
+                "advised_dropped_beyond_horizon": int(dropped_horizon),
+            },
+            indent=1,
+        )
+    )
 
     dbp = GRAPH / "graph.duckdb"
     dbp.unlink(missing_ok=True)

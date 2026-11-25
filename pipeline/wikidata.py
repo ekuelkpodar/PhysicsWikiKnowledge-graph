@@ -7,8 +7,8 @@ import hashlib
 import json
 import os
 import time
+from collections.abc import Iterable, Iterator
 from pathlib import Path
-from typing import Iterable, Iterator
 
 import requests
 
@@ -20,15 +20,16 @@ REPO_URL = os.environ.get("REPO_URL", "https://github.com/PhysicsWikiKnowledge-g
 USER_AGENT = f"PhysicsFamilyTree/0.1 ({REPO_URL}; research/visualisation) python-requests"
 
 _session = requests.Session()
-_session.headers.update(
-    {"User-Agent": USER_AGENT, "Accept": "application/sparql-results+json"}
-)
+_session.headers.update({"User-Agent": USER_AGENT, "Accept": "application/sparql-results+json"})
 _last_request = 0.0
 MIN_INTERVAL = 1.0  # seconds between live requests (we never run concurrently)
 
 
 class SparqlError(RuntimeError):
     pass
+
+
+USED_KEYS: set[str] = set()  # cache keys touched this run (for pruning stale entries)
 
 
 def query_hash(query: str) -> str:
@@ -48,6 +49,7 @@ def run_query(query: str, *, max_retries: int = 8, offline: bool | None = None) 
     global _last_request
     offline = offline if offline is not None else os.environ.get("OFFLINE") == "1"
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    USED_KEYS.add(query_hash(query))
     path = CACHE_DIR / f"{query_hash(query)}.json.gz"
     legacy = path.with_suffix("")  # uncompressed .json from older runs
     if path.exists():

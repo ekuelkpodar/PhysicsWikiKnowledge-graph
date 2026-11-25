@@ -71,10 +71,34 @@ def _raw(rows):
 def test_clean_dedupes_and_flags():
     raw = _raw(
         [
-            ["http://www.wikidata.org/entity/Q1", "", "Ann", "3 May 1850", "", "https://en.wikipedia.org/wiki/Ann", ""],
+            [
+                "http://www.wikidata.org/entity/Q1",
+                "",
+                "Ann",
+                "3 May 1850",
+                "",
+                "https://en.wikipedia.org/wiki/Ann",
+                "",
+            ],
             ["http://www.wikidata.org/entity/Q1", "", "Q1", "4 May 1851", "", "", ""],
-            ["http://www.wikidata.org/entity/Q2", "", "Q2", "1 January 1950", "", "https://en.wikipedia.org/wiki/Bo_Bo", ""],
-            ["http://www.wikidata.org/entity/Q3", "", "Cy", "1 January 0287 BCE", "", "", "1 January 0212 BCE"],
+            [
+                "http://www.wikidata.org/entity/Q2",
+                "",
+                "Q2",
+                "1 January 1950",
+                "",
+                "https://en.wikipedia.org/wiki/Bo_Bo",
+                "",
+            ],
+            [
+                "http://www.wikidata.org/entity/Q3",
+                "",
+                "Cy",
+                "1 January 0287 BCE",
+                "",
+                "",
+                "1 January 0212 BCE",
+            ],
         ]
     )
     df = clean(raw).set_index("qid")
@@ -84,7 +108,10 @@ def test_clean_dedupes_and_flags():
     # pre-1910 with no death -> missing, not alive
     assert df.loc["Q1", "death_missing_suspect"] and df.loc["Q1", "vital_status"] == "death_missing"
     assert df.loc["Q2", "name_raw"] == "Bo Bo"
-    assert df.loc["Q2", "birth_precision"] == "year" and df.loc["Q2", "vital_status"] == "presumed_alive"
+    assert (
+        df.loc["Q2", "birth_precision"] == "year"
+        and df.loc["Q2", "vital_status"] == "presumed_alive"
+    )
     assert df.loc["Q3", "birth_year"] == -287 and df.loc["Q3", "lifespan"] == 75
 
 
@@ -126,7 +153,9 @@ def test_break_cycles_removes_implausible_edge():
 
 
 def test_break_cycles_two_cycle():
-    edges = pd.DataFrame({"advisor": ["A", "B"], "student": ["B", "A"], "both_directions": [False, False]})
+    edges = pd.DataFrame(
+        {"advisor": ["A", "B"], "student": ["B", "A"], "both_directions": [False, False]}
+    )
     dag, removed = break_cycles(edges, {"A": 1900, "B": 1950})
     assert len(dag) == 1 and dag.iloc[0].advisor == "A"
 

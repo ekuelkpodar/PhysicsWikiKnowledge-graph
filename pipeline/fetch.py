@@ -7,13 +7,16 @@ from pathlib import Path
 
 import pandas as pd
 
-from pipeline.wikidata import load_template, qid, run_batched
+from pipeline.wikidata import CACHE_DIR, USED_KEYS, load_template, qid, run_batched
 
 ROOT = Path(__file__).resolve().parents[1]
 CLEAN = ROOT / "data/processed/physicists_clean.csv"
 INTERIM = ROOT / "data/interim"
 
 GENEALOGY_PROPS = {"P184", "P185", "P1066"}
+# Beyond the first hop we only walk UP (advisors / teachers). Walking down via P185 from
+# hop-1 students would pull in tens of thousands of Mathematics-Genealogy imports.
+UPWARD_PROPS = {"P184", "P1066"}
 ENTITY_PROPS = {"P27", "P19", "P101", "P800", "P21", "P106", "P166", "P108", "P69", "P737"}
 EXPANSION_HOPS = 2  # how far to follow advisor/student links beyond the seed
 
@@ -62,7 +65,8 @@ def main() -> int:
         meta_all.append(m)
         if hop == EXPANSION_HOPS:
             break
-        gen = e[e.prop.isin(GENEALOGY_PROPS) & e.o.map(_is_entity)]
+        props = GENEALOGY_PROPS if hop == 0 else UPWARD_PROPS
+        gen = e[e.prop.isin(props) & e.o.map(_is_entity)]
         nxt = sorted({qid(o) for o in gen.o} - set(people))
         for p in nxt:
             people[p] = hop + 1
@@ -84,18 +88,29 @@ def main() -> int:
 
     # --- target entities --------------------------------------------------
     targets = set(edges.loc[edges.prop.isin(ENTITY_PROPS), "o"]) | set(qual["o"])
-    targets = sorted({qid(t) for t in targets if _is_entity(t)} - set(people))
+    all_targets = {qid(t) for t in targets if _is_entity(t)}
+    targets = sorted(all_targets - set(people))
     print(f"target entities: {len(targets):,}")
-    ent = pd.DataFrame(run_batched(load_template("05_entity_meta.rq"), targets, 400, "entities"))
+    t_ent = load_template("05_entity_meta.rq")
+    rows = run_batched(t_ent, targets, 400, "entities")
+    # Some genealogy links point at concepts ("student of: physics"), so those QIDs sit in
+    # the people set. Fetch their labels separately; build_graph drops them from people.
+    overlap = sorted(all_targets & set(people))
+    if overlap:
+        rows += run_batched(t_ent, overlap, 400, "concepts-in-people")
+    ent = pd.DataFrame(rows)
     ent["e"] = ent["e"].map(qid)
 
     # countries referenced by places/institutions + citizenship targets
     countries = set(ent["country"].dropna().map(qid))
     countries |= {qid(o) for o in edges.loc[edges.prop == "P27", "o"] if _is_entity(o)}
     countries = sorted(countries)
-    cty = pd.DataFrame(run_batched(load_template("06_country_coords.rq"), countries, 400, "countries"))
+    cty = pd.DataFrame(
+        run_batched(load_template("06_country_coords.rq"), countries, 400, "countries")
+    )
     cty["e"] = cty["e"].map(qid)
     ent.to_parquet(INTERIM / "entity_meta.parquet")
+    (CACHE_DIR / "MANIFEST.txt").write_text("\n".join(sorted(USED_KEYS)) + "\n")
     cty.to_parquet(INTERIM / "country_meta.parquet")
     print(
         f"done: people={len(people):,} claims={len(edges):,} qualified={len(qual):,} "

@@ -1,0 +1,44 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv venv -p 3.11 .venv && uv pip install -p .venv -r requirements.txt
+      - name: Lint
+        run: |
+          .venv/bin/ruff check src pipeline models api tests
+          .venv/bin/black --check src pipeline models api tests
+      - name: Tests
+        run: .venv/bin/python -m pytest -q tests
+      - name: Rebuild graph from the committed cache (no network)
+        env: { OFFLINE: "1", PYTHONPATH: "." }
+        run: |
+          .venv/bin/python -m src.clean
+          .venv/bin/python -m pipeline.fetch
+          .venv/bin/python -m pipeline.build_graph
+          .venv/bin/python -m pipeline.validate
+
+  web:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: web } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: web/package-lock.json }
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+        env: { CI: "1" }
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with: { name: playwright-report, path: web/test-results }

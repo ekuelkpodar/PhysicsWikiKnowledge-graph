@@ -173,7 +173,9 @@ def clean(raw: pd.DataFrame) -> pd.DataFrame:
     df["lifespan_implausible"] = ((lifespan < 0) | (lifespan > MAX_LIFESPAN)).fillna(False)
     # Status for survival analysis: alive only if no death AND plausibly alive.
     df["vital_status"] = "dead"
-    df.loc[df["death_year"].isna() & ~df["death_missing_suspect"], "vital_status"] = "presumed_alive"
+    df.loc[df["death_year"].isna() & ~df["death_missing_suspect"], "vital_status"] = (
+        "presumed_alive"
+    )
     df.loc[df["death_missing_suspect"], "vital_status"] = "death_missing"
     df.loc[df["birth_year"].isna() & df["death_year"].isna(), "vital_status"] = "unknown"
     return df
