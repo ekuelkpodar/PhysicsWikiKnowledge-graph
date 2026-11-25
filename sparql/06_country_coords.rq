@@ -1,0 +1,7 @@
+# Country centroid fallback (P625 of the country itself) + ISO 3166-1 alpha-3.
+SELECT ?e (SAMPLE(?l) AS ?label) (SAMPLE(?xy) AS ?coord) (SAMPLE(?iso) AS ?iso3) WHERE {
+  VALUES ?e { {values} }
+  OPTIONAL { ?e rdfs:label ?l FILTER(LANG(?l) = "en") }
+  OPTIONAL { ?e wdt:P625 ?xy }
+  OPTIONAL { ?e wdt:P298 ?iso }
+} GROUP BY ?e

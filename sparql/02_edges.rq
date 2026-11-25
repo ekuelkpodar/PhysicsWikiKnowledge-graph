@@ -1,0 +1,7 @@
+# Unqualified ("truthy", best-rank) person statements. {values} = wd:Q.. list.
+SELECT ?item ?prop ?o WHERE {
+  VALUES ?item { {values} }
+  VALUES ?prop { wdt:P184 wdt:P185 wdt:P1066 wdt:P737 wdt:P27 wdt:P19
+                 wdt:P101 wdt:P800 wdt:P21 wdt:P106 wdt:P18 }
+  ?item ?prop ?o .
+}

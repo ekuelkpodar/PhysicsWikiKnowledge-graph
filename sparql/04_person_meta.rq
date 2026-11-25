@@ -1,0 +1,12 @@
+# Labels, English description, sitelink count, and dates with precision.
+SELECT ?item ?label ?desc ?sitelinks ?article
+       (SAMPLE(?b) AS ?birth) (MAX(?bp) AS ?birthPrec)
+       (SAMPLE(?d) AS ?death) (MAX(?dp) AS ?deathPrec) WHERE {
+  VALUES ?item { {values} }
+  OPTIONAL { ?item rdfs:label ?label FILTER(LANG(?label) = "en") }
+  OPTIONAL { ?item schema:description ?desc FILTER(LANG(?desc) = "en") }
+  OPTIONAL { ?item wikibase:sitelinks ?sitelinks }
+  OPTIONAL { ?article schema:about ?item ; schema:isPartOf <https://en.wikipedia.org/> }
+  OPTIONAL { ?item p:P569/psv:P569 [ wikibase:timeValue ?b ; wikibase:timePrecision ?bp ] }
+  OPTIONAL { ?item p:P570/psv:P570 [ wikibase:timeValue ?d ; wikibase:timePrecision ?dp ] }
+} GROUP BY ?item ?label ?desc ?sitelinks ?article

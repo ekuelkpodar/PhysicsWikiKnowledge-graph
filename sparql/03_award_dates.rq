@@ -1,0 +1,13 @@
+# Qualified statements: awards (P166 + P585 point in time), employers (P108 +
+# P580/P582) and education (P69 + P580/P582/P585). Deprecated rank excluded.
+SELECT ?item ?prop ?o ?time ?start ?end WHERE {
+  VALUES ?item { {values} }
+  VALUES (?p ?ps ?prop) {
+    (p:P166 ps:P166 "P166") (p:P108 ps:P108 "P108") (p:P69 ps:P69 "P69")
+  }
+  ?item ?p ?st . ?st ?ps ?o .
+  ?st wikibase:rank ?rank . FILTER(?rank != wikibase:DeprecatedRank)
+  OPTIONAL { ?st pq:P585 ?time }
+  OPTIONAL { ?st pq:P580 ?start }
+  OPTIONAL { ?st pq:P582 ?end }
+}

@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.env
+.env.*
+data/interim/
+data/cache/*.tmp
+data/fetch.log
+*.duckdb.wal
+api/kuzu_db/
+web/node_modules/
+web/dist/
+web/test-results/
+web/playwright-report/
+.DS_Store

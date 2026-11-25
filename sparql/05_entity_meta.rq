@@ -1,0 +1,8 @@
+# Labels / country / coordinates for target entities (institutions, places,
+# awards, fields, countries, works).
+SELECT ?e (SAMPLE(?l) AS ?label) (SAMPLE(?c) AS ?country) (SAMPLE(?xy) AS ?coord) WHERE {
+  VALUES ?e { {values} }
+  OPTIONAL { ?e rdfs:label ?l FILTER(LANG(?l) = "en") }
+  OPTIONAL { ?e wdt:P17 ?c }
+  OPTIONAL { ?e wdt:P625 ?xy }
+} GROUP BY ?e

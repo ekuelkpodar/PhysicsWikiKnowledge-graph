@@ -1,0 +1,11 @@
+# Seed query that produced data/raw/physicists.csv (kept for provenance; the
+# pipeline starts from the CSV). Every combination of birth/death statements is
+# returned, which is why some people appear on several rows.
+SELECT ?item ?itemLabel ?birth ?article ?death WHERE {
+  ?item wdt:P106 wd:Q169470 .                       # occupation: physicist
+  ?article schema:about ?item ;
+           schema:isPartOf <https://en.wikipedia.org/> .
+  OPTIONAL { ?item wdt:P569 ?birth }
+  OPTIONAL { ?item wdt:P570 ?death }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
