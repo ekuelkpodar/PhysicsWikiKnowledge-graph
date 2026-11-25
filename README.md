@@ -39,6 +39,16 @@ Every chart has PNG/CSV export and an accessible data table. Filters and the tim
 
 ![Family tree of a top founder](docs/media/family-tree.gif)
 
+## Screenshots
+
+| | |
+|---|---|
+| [![Story](docs/screenshots/story.jpg)](docs/screenshots/story.jpg)<br/>**Story:** 11,931 physicists, one dot each, before the scroll narrative begins | [![Graph](docs/screenshots/graph.jpg)](docs/screenshots/graph.jpg)<br/>**Graph:** all 25,539 people coloured by field community, with laureates in gold |
+| [![Family trees](docs/screenshots/family-trees.jpg)](docs/screenshots/family-trees.jpg)<br/>**Family trees:** founders ranked by smoothed laureate yield; William Henry Bragg's tree has 13 laureates among 39 descendants | [![Migration](docs/screenshots/migration.jpg)](docs/screenshots/migration.jpg)<br/>**Migration:** 4,759 birthplace → employer arcs, with a Sankey of 1933–45 flows and the two migration shocks |
+| [![Fields](docs/screenshots/fields.jpg)](docs/screenshots/fields.jpg)<br/>**Fields:** Leiden field communities flowing across 25‑year birth cohorts | [![Recognition](docs/screenshots/recognition.jpg)](docs/screenshots/recognition.jpg)<br/>**Recognition:** Kaplan–Meier curves; a laureate advisor goes with ~3× the award rate |
+| [![Missing links](docs/screenshots/missing-links.jpg)](docs/screenshots/missing-links.jpg)<br/>**Missing links:** predicted advisors with evidence (AUC 0.927; 34% top‑1 on the independent check) | [![Data quality](docs/screenshots/data-quality.jpg)](docs/screenshots/data-quality.jpg)<br/>**Data quality:** what Wikidata gets wrong, counted and ranked, with links back to fix it |
+| [![About](docs/screenshots/about.jpg)](docs/screenshots/about.jpg)<br/>**About:** data licensing, the pipeline and model cards | |
+
 ## Architecture
 
 ```mermaid
